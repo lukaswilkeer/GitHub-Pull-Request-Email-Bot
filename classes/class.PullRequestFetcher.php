@@ -21,7 +21,7 @@ class PullRequestFetcher {
      *
      * @var Array $pull_requests
      */
-    private $requests;
+    private $requests = array();
 
     /**
      * The config array from config.inc.php
@@ -32,7 +32,12 @@ class PullRequestFetcher {
 
     public function __construct() {
         $this->config = Config::getInstance();
-        $this->requests = json_decode(WebPage::get($this->requestUrl(), $this->config['server_name']))->pulls;
+        $pulls = json_decode(WebPage::get($this->requestUrl(), $this->config['server_name']));
+        //print_r($this->requestUrl());
+        //print_r($pulls);
+        if (isset($pulls)) $this->requests = $pulls;
+        //print_r($this->requests);
+        //$this->requests = json_decode(WebPage::get($this->requestUrl(), $this->config['server_name']))->pulls;
     }
 
     /**
@@ -57,16 +62,20 @@ class PullRequestFetcher {
     public function requestUrl($which = 'open') {
         switch ($which) {
             case 'open':
-                return 'http://github.com/api/v2/json/pulls/'.
-                $this->config['repo_user'].'/'.$this->config['repo_name'].'/open';
+                //return 'http://github.com/api/v2/json/pulls/'.
+                //$this->config['repo_user'].'/'.$this->config['repo_name'].'/open';
+                return 'https://api.github.com/repos/'.$this->config['repo_user'].'/'.
+                $this->config['repo_name'].'/pulls';
                 break;
             case 'closed':
                 return 'http://github.com/api/v2/json/pulls/'.
                 $this->config['repo_user'].'/'.$this->config['repo_name'].'/closed';
                 break;
             default:
-                return 'http://github.com/api/v2/json/pulls/'.
-                $this->config['repo_user'].'/'.$this->config['repo_name'];
+                return 'https://api.github.com/repos/'.$this->config['repo_user'].'/'.
+                $this->config['repo_name'].'/pulls';
+                //return 'http://github.com/api/v2/json/pulls/'.
+                //$this->config['repo_user'].'/'.$this->config['repo_name'];
         }
     }
 

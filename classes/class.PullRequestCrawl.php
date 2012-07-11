@@ -32,6 +32,7 @@ class PullRequestCrawl {
 
     public function run() {
         $requests = $this->fetcher->getRequestsSinceLastCrawl();
+//print_r($requests);
 
         if (count($requests) > 0) {
             //Send the requests all in one email

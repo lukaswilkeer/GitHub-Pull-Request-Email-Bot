@@ -42,7 +42,15 @@ class Email {
         if (!isset($subject)) {
             $subject = $config['email_subject'];
         }
-        return mail($to, $subject, $content, $additional_headers);
+        //not sure why we have to do this, but we do to avoid blank email messages
+        if ($content != "") {
+            return mail($to, $subject, $content, $additional_headers);
+        } else {
+            return true;
+        }
+        // echo "SUBJECT: ".$subject."
+        // BODY: ".$body;
+
     }
 }
 ?>
